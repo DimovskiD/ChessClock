@@ -4,6 +4,11 @@ import com.deluxe.core.data.ChessGame
 
 interface ChessDataSource {
 
-    fun getDefaultChessVariants() : List<ChessGame>
+    suspend fun getAllChessGames() : List<ChessGame>
 
+    suspend fun addContactDetails(chessGame: ChessGame) : Long
+
+    suspend fun getContactDetailsById(chessGameId : Long) : ChessGame?
+
+    suspend fun deleteChessGame(chessGame: ChessGame)
 }

@@ -4,6 +4,11 @@ import com.deluxe.core.data.ChessGame
 
 class ChessRepository(private val chessDataSource: ChessDataSource) {
 
-    fun getDefaultChessVariants() : List<ChessGame> = chessDataSource.getDefaultChessVariants()
+    suspend fun getAllChessGames() : List<ChessGame> = chessDataSource.getAllChessGames()
 
+    suspend fun addChessGame(chessGameEntity: ChessGame) : Long = chessDataSource.addContactDetails(chessGameEntity)
+
+    suspend fun getChessGameById(chessGameId : Long) : ChessGame? = chessDataSource.getContactDetailsById(chessGameId)
+
+    suspend fun deleteChessGame(chessGameEntity: ChessGame) = chessDataSource.deleteChessGame(chessGameEntity)
 }

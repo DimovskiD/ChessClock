@@ -1,3 +1,5 @@
 package com.deluxe.core.data
 
-class Player(val clock: Clock, var movesMade : Int)
+class Player(var time: Long, val increment : Int,  var movesMade : Int) {
+    fun getTimeInMillis(): Long  = time * 1000
+}

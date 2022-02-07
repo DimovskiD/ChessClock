@@ -1,7 +1,7 @@
 package com.deluxe.chessclock.framework.di
 
 import android.app.Application
-import com.deluxe.chessclock.framework.data.PopularChessGamesDataSource
+import com.deluxe.chessclock.framework.data.ChessGamesDataSource
 import com.deluxe.core.repository.ChessRepository
 import dagger.Module
 import dagger.Provides
@@ -10,6 +10,6 @@ import dagger.Provides
 class ChessRepositoryModule {
 
     @Provides
-    fun provideChessRepositoryModule() = ChessRepository(PopularChessGamesDataSource())
+    fun provideChessRepositoryModule(application : Application) = ChessRepository(ChessGamesDataSource(application))
 
 }

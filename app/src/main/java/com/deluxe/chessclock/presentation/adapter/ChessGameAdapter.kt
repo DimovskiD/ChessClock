@@ -22,7 +22,7 @@ class ChessGameAdapter(private val chessGames : List<ChessGame>) : RecyclerView.
 
         fun bind(chessGame: ChessGame) {
             binding.nameOfTheGame.text = chessGame.toString()
-            binding.increment.text = chessGame.getIncrement().toString()
+            binding.increment.text = chessGame.increment.toString()
             binding.duration.text = chessGame.getDuration()
         }
     }

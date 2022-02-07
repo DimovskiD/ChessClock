@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.deluxe.chessclock.databinding.FragmentListChessGamesBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
 import com.deluxe.chessclock.presentation.adapter.ChessGameAdapter
+import com.deluxe.core.data.Status
 
 class FragmentListChessGames : Fragment(){
 
@@ -30,10 +31,14 @@ class FragmentListChessGames : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ChessGameAdapter(viewModel.getChessGames())
+        viewModel.getChessGames().observe(viewLifecycleOwner) {
+            if (it.status == Status.SUCCESS) {
+                val adapter = ChessGameAdapter(it.data!!)
+                binding.chessGames.adapter = adapter
+            }
+        }
 
         binding.chessGames.layoutManager = LinearLayoutManager(context)
-        binding.chessGames.adapter = adapter
         binding.chessGames.addItemDecoration(
             DividerItemDecoration(
                 context,
