@@ -20,6 +20,8 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
     var activeGame: ChessGame? = null
         private set
 
+    val gameStarted: ObservableField<Boolean> = ObservableField(false)
+
     val player1Moves: ObservableField<Int> = ObservableField()
     val player2Moves: ObservableField<Int> = ObservableField()
 
@@ -62,6 +64,7 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun startGame() {
         activeGame?.start()
+        gameStarted.set(true)
     }
 
     private fun isGameStarted(): Boolean = activeGame?.isGameStarted() == true
