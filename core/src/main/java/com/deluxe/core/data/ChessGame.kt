@@ -9,8 +9,9 @@ data class ChessGame(val name: String, val time : Long, val increment : Int, val
     val player2 = Player(Players.PLAYER_TWO.playerNumber, time, 0)
 
     private var activePlayer : Player? = null
+    var gameState : GameState = GameState.NOT_STARTED
 
-    fun switchPlayer(timeRemaining : Long) : Player {
+    fun switchPlayer(timeRemaining : Long) : Player { //todo calculate increment and show on switch
         if (activePlayer == null) throw Exception("You need to call start() method before switching players")
         activePlayer!!.time = timeRemaining
         activePlayer!!.movesMade++
@@ -33,8 +34,21 @@ data class ChessGame(val name: String, val time : Long, val increment : Int, val
 
     fun start() {
         activePlayer = player1
+        gameState = GameState.RESUMED
     }
 
-    fun isGameStarted(): Boolean = activePlayer != null
+    fun pause(timeRemaining: Long) {
+        if (gameState == GameState.RESUMED) {
+            activePlayer?.time = timeRemaining
+            gameState = GameState.PAUSED
+        }
+    }
+
+    fun reset() {
+        player1.restart(time)
+        player2.restart(time)
+        gameState = GameState.NOT_STARTED
+        activePlayer = null
+    }
 
 }

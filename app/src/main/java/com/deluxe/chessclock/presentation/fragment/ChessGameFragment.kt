@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.deluxe.chessclock.databinding.FragmentChessGameBinding
-import com.deluxe.core.data.Players
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
+import com.deluxe.core.data.Players
+
 
 class ChessGameFragment : Fragment() {
 
@@ -44,16 +45,48 @@ class ChessGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.root.setOnClickListener {
-            playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
-            viewModel.performAction(calculateRemainingTime())
-            playerTimerMap[viewModel.getActivePlayerNumber()]?.start(
-                viewModel.activeGame?.getActivePlayerRemainingTime() ?: 0L
-            )
+            if (viewModel.isGameStarted()) {
+                playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
+                viewModel.switchPlayer(calculateRemainingTime()?:0L)
+                startCounter()
+            }
         }
+
+        binding.start.setOnClickListener {
+            if (viewModel.isGameStarted()) {
+                pauseGame()
+            } else {
+                viewModel.resumeGame()
+                startCounter()
+            }
+        }
+
+        binding.restart.setOnClickListener {
+            playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
+            viewModel.resetGame()
+            binding.invalidateAll()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pauseGame()
+    }
+
+    private fun pauseGame() {
+        playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
+        viewModel.pauseGame(calculateRemainingTime())
+    }
+
+    private fun startCounter() {
+        playerTimerMap[viewModel.getActivePlayerNumber()]?.start(
+            viewModel.activeGame?.getActivePlayerRemainingTime() ?: 0L
+        )
     }
 
     private fun calculateRemainingTime(): Long? =
         (playerTimerMap[viewModel.getActivePlayerNumber()]?.base?.minus(SystemClock.elapsedRealtime()))?.div(
             1000
         )
+
 }

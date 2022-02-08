@@ -5,10 +5,11 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
 import com.deluxe.chessclock.framework.UseCases
-import com.deluxe.core.data.Players
 import com.deluxe.chessclock.framework.di.ApplicationModule
 import com.deluxe.chessclock.framework.di.DaggerViewModelComponent
 import com.deluxe.core.data.ChessGame
+import com.deluxe.core.data.GameState
+import com.deluxe.core.data.Players
 import com.deluxe.core.data.Resource
 import javax.inject.Inject
 
@@ -37,14 +38,10 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
         this.activeGame = chessGame
         player1Moves.set(0)
         player2Moves.set(0)
+        gameStarted.set(false)
     }
 
-    fun performAction(remainingTime: Long?) {
-        if (!isGameStarted()) startGame()
-        else switchPlayer(remainingTime?:0L)
-    }
-
-    private fun switchPlayer(remainingTime: Long) {
+    fun switchPlayer(remainingTime: Long) {
         val activePlayer = activeGame?.switchPlayer(if (remainingTime == 0L) activeGame!!.time else remainingTime)
         notifyObservers(activePlayer?.playerNumber?:-1)
     }
@@ -67,7 +64,24 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
         gameStarted.set(true)
     }
 
-    private fun isGameStarted(): Boolean = activeGame?.isGameStarted() == true
+    fun isGameStarted(): Boolean = activeGame?.gameState == GameState.RESUMED
+
+    fun pauseGame(playerTimeRemaining : Long?) {
+        activeGame?.pause(playerTimeRemaining?:0L)
+        gameStarted.set(false)
+    }
+
+    fun resumeGame() {
+        if (activeGame?.gameState == GameState.NOT_STARTED) startGame()
+        else activeGame?.gameState = GameState.RESUMED
+        gameStarted.set(true)
+    }
+
+    fun resetGame() {
+        activeGame?.reset()
+        gameStarted.set(false)
+    }
+
 
     init {
         DaggerViewModelComponent

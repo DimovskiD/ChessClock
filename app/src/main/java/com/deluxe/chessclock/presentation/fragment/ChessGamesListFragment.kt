@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
@@ -58,4 +59,16 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
     private fun navigate(direction: NavDirections) {
         Navigation.findNavController(binding.root).navigate(direction)
     }
+
+
+    override fun onPause() {
+        super.onPause()
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.hide()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.show()
+    }
+
 }

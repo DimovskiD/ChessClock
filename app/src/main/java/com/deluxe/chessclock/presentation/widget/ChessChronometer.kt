@@ -28,6 +28,12 @@ class ChessChronometer : Chronometer {
         isRunning = true
     }
 
+    fun stop(timeLeft: Long) {
+        base = timeLeft
+        invalidate()
+        stop()
+    }
+
     override fun stop() {
         super.stop()
         isRunning = false
