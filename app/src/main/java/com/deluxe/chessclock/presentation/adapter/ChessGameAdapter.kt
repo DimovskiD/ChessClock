@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.deluxe.chessclock.databinding.ChessGameViewHolderBinding
+import com.deluxe.chessclock.presentation.listener.OnChessGameClickedListener
 import com.deluxe.core.data.ChessGame
 
-class ChessGameAdapter(private val chessGames : List<ChessGame>) : RecyclerView.Adapter<ChessGameAdapter.ChessGameViewHolder>() {
+class ChessGameAdapter(private val chessGames : List<ChessGame>, private val chessGameClickedListener: OnChessGameClickedListener) : RecyclerView.Adapter<ChessGameAdapter.ChessGameViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChessGameViewHolder =
         ChessGameViewHolder(ChessGameViewHolderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -21,6 +22,7 @@ class ChessGameAdapter(private val chessGames : List<ChessGame>) : RecyclerView.
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(chessGame: ChessGame) {
+            binding.root.setOnClickListener { chessGameClickedListener.onChessGameClick(chessGame) }
             binding.nameOfTheGame.text = chessGame.toString()
             binding.increment.text = chessGame.increment.toString()
             binding.duration.text = chessGame.getDuration()

@@ -1,26 +1,40 @@
 package com.deluxe.core.data
 
-import java.text.SimpleDateFormat
+import com.deluxe.core.formatTime
+import java.io.Serializable
+import java.lang.Exception
 
-open class ChessGame(val name: String, val time : Long, val increment : Int, val id : Long = 0L) {
-    private val player1 = Player(time, increment, 0)
-    private val player2 = Player(time, increment, 0)
+data class ChessGame(val name: String, val time : Long, val increment : Int, val id : Long = 0L) : Serializable {
+    val player1 = Player(Players.PLAYER_ONE.playerNumber, time, 0)
+    val player2 = Player(Players.PLAYER_TWO.playerNumber, time, 0)
 
-    private var activePlayer = player1
+    private var activePlayer : Player? = null
 
-    fun switchPlayer(timeElapsed : Long) {
-        activePlayer.time = activePlayer.time - timeElapsed + activePlayer.increment
-        activePlayer.movesMade++
+    fun switchPlayer(timeRemaining : Long) : Player {
+        if (activePlayer == null) throw Exception("You need to call start() method before switching players")
+        activePlayer!!.time = timeRemaining
+        activePlayer!!.movesMade++
+        if (activePlayer!!.movesMade >= 1) activePlayer!!.time += increment
         activePlayer = if (activePlayer == player1) player2 else player1
+        return activePlayer!!
     }
 
-    @Suppress("SimpleDateFormat")
+    fun getActivePlayerRemainingTime() = activePlayer?.getTimeInMillis()
+
+    fun getActivePlayerNumber() = activePlayer?.playerNumber
+
     fun getDuration() : String {
-        val df = SimpleDateFormat("mm:ss")
-        return df.format(player1.getTimeInMillis())
+       return (time*1000).formatTime()
     }
 
     override fun toString(): String {
         return name
     }
+
+    fun start() {
+        activePlayer = player1
+    }
+
+    fun isGameStarted(): Boolean = activePlayer != null
+
 }

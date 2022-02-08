@@ -5,7 +5,6 @@
     android:padding="10dp"
     android:clickable="true"
     android:focusable="true"
-    android:layout_marginBottom="5dp"
     android:background="?attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -13,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/name_of_the_game"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_marginStart="5dp"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,6 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/name_of_the_game"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Chess Clock</string>
+    <string name="choose_chess_game">Choose chess game</string>
 </resources>

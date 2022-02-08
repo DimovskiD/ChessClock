@@ -1,5 +1,9 @@
 package com.deluxe.core.data
 
-class Player(var time: Long, val increment : Int,  var movesMade : Int) {
+import com.deluxe.core.formatTime
+
+class Player(val playerNumber : Int, var time: Long, var movesMade : Int) {
     fun getTimeInMillis(): Long  = time * 1000
+
+    fun getFormattedTime(): String = getTimeInMillis().formatTime()
 }

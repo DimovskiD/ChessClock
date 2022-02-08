@@ -5,20 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.deluxe.chessclock.databinding.FragmentListChessGamesBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
 import com.deluxe.chessclock.presentation.adapter.ChessGameAdapter
+import com.deluxe.chessclock.presentation.listener.OnChessGameClickedListener
+import com.deluxe.core.data.ChessGame
 import com.deluxe.core.data.Status
 
-class FragmentListChessGames : Fragment(){
+class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
 
     private val binding : FragmentListChessGamesBinding by lazy { FragmentListChessGamesBinding.inflate(
         LayoutInflater.from(context)) }
-    private val viewModel : ChessViewModel by lazy { ViewModelProvider(this).get(
-        ChessViewModel::class.java) }
+    private val viewModel : ChessViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +36,7 @@ class FragmentListChessGames : Fragment(){
 
         viewModel.getChessGames().observe(viewLifecycleOwner) {
             if (it.status == Status.SUCCESS) {
-                val adapter = ChessGameAdapter(it.data!!)
+                val adapter = ChessGameAdapter(it.data!!, this@ChessGamesListFragment)
                 binding.chessGames.adapter = adapter
             }
         }
@@ -45,5 +48,14 @@ class FragmentListChessGames : Fragment(){
                 LinearLayoutManager.VERTICAL
             )
         )
+    }
+
+    override fun onChessGameClick(chessGame: ChessGame) {
+        viewModel.setActiveGame(chessGame)
+        navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToFragmentChessGame())
+    }
+
+    private fun navigate(direction: NavDirections) {
+        Navigation.findNavController(binding.root).navigate(direction)
     }
 }
