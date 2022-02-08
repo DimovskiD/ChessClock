@@ -6,9 +6,9 @@ interface ChessDataSource {
 
     suspend fun getAllChessGames() : List<ChessGame>
 
-    suspend fun addContactDetails(chessGame: ChessGame) : Long
+    suspend fun addChessGame(chessGame: ChessGame) : Long
 
-    suspend fun getContactDetailsById(chessGameId : Long) : ChessGame?
+    suspend fun getChessGameById(chessGameId : Long) : ChessGame?
 
     suspend fun deleteChessGame(chessGame: ChessGame)
 }

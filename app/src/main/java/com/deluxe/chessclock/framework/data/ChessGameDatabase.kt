@@ -8,7 +8,7 @@ import com.deluxe.chessclock.framework.data.dao.ChessGameDao
 import com.deluxe.chessclock.framework.data.model.ChessGameEntity
 
 @Database(entities = [ChessGameEntity::class], version = 1)
-abstract class ChessGameDatabase : RoomDatabase(){
+abstract class ChessGameDatabase : RoomDatabase() {
 
     companion object {
 
@@ -18,7 +18,7 @@ abstract class ChessGameDatabase : RoomDatabase(){
 
         private fun create(context: Context): ChessGameDatabase =
             Room.databaseBuilder(context, ChessGameDatabase::class.java, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
+                .createFromAsset("database/chess_games.db")
                 .build()
 
 

@@ -11,10 +11,10 @@ class ChessGamesDataSource(context : Context) : ChessDataSource {
 
     override suspend fun getAllChessGames(): List<ChessGame> = chessGameDao.getAllChessGames().map { it.toChessGame() }
 
-    override suspend fun addContactDetails(chessGame: ChessGame): Long = chessGameDao.addContactDetails(
+    override suspend fun addChessGame(chessGame: ChessGame): Long = chessGameDao.addChessGameDetails(
         ChessGameEntity.fromChessGame(chessGame))
 
-    override suspend fun getContactDetailsById(chessGameId: Long): ChessGame? = chessGameDao.getContactDetailsById(chessGameId)?.toChessGame()
+    override suspend fun getChessGameById(chessGameId: Long): ChessGame? = chessGameDao.getChessGameById(chessGameId)?.toChessGame()
 
     override suspend fun deleteChessGame(chessGame: ChessGame) = chessGameDao.deleteChessGame(
         ChessGameEntity.fromChessGame(chessGame))
