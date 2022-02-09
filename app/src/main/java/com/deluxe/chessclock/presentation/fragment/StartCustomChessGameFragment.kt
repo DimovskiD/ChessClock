@@ -40,10 +40,11 @@ class StartCustomChessGameFragment : BottomSheetDialogFragment() {
     }
 
     private fun startGame(shouldSave: Boolean) {
-        val game = ChessGame(binding.nameOfTheGameText.text.toString(),
-                binding.durationText.text.toString().toLong() * 60,
-                binding.incrementText.text.toString().toInt()
-            )
+        val game = ChessGame(
+            binding.nameOfTheGameText.text.toString(),
+            binding.durationText.text.toString().toLong() * 60,
+            binding.incrementText.text.toString().toInt()
+        )
         if (shouldSave) viewModel.saveChessGame(game)
         viewModel.setActiveGame(game)
         navigateSafely(
@@ -55,7 +56,7 @@ class StartCustomChessGameFragment : BottomSheetDialogFragment() {
     private fun validateFieldsNotEmpty(): Boolean =
         binding.durationText.text.toString().isNotEmpty() &&
                 binding.incrementText.text.toString().isNotEmpty() &&
-                binding.nameOfTheGameText.text.toString().isNotEmpty()
+                (!binding.save.isChecked || binding.nameOfTheGameText.text.toString().isNotEmpty())
 
 
     private fun validateFieldsInput(): Boolean =
