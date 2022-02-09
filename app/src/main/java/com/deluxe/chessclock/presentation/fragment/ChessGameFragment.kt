@@ -5,20 +5,23 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.deluxe.chessclock.R
 import com.deluxe.chessclock.databinding.FragmentChessGameBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
+import com.deluxe.chessclock.presentation.listener.OnTimeExpiredListener
 import com.deluxe.chessclock.presentation.widget.ChessChronometer
 import com.deluxe.core.data.Players
 
 
-class ChessGameFragment : Fragment() {
+class ChessGameFragment : Fragment(), OnTimeExpiredListener {
 
     private val playerTimerMap by lazy {
         hashMapOf(
-            Players.PLAYER_ONE.playerNumber to binding.playerOneTime,
-            Players.PLAYER_TWO.playerNumber to binding.playerTwoTime
+            Players.PLAYER_ONE.playerNumber to binding.playerOneTime.apply { this.bindWinner(Players.PLAYER_TWO, this@ChessGameFragment) },
+            Players.PLAYER_TWO.playerNumber to binding.playerTwoTime.apply { this.bindWinner(Players.PLAYER_ONE, this@ChessGameFragment) }
         )
     }
 
@@ -45,42 +48,58 @@ class ChessGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.root.setOnClickListener {
-            if (viewModel.isGameResumed())
-                switchPlayer()
+            switchPlayer()
         }
 
         binding.start.setOnClickListener {
-            if (viewModel.isGameResumed()) pauseGame()
-            else {
-                viewModel.resumeGame()
-                startCounter()
-            }
+            handleStartClicked()
         }
 
-        binding.restart.setOnClickListener {
-            getChronometerForPlayer(viewModel.getActivePlayerNumber())?.stop()
-            viewModel.resetGame()
-            binding.invalidateAll()
+        binding.reset.setOnClickListener {
+            resetGame()
+        }
+    }
+
+    private fun handleStartClicked() {
+        if (viewModel.isGameResumed()) pauseGame()
+        else {
+            viewModel.resumeGame()
+            startCounter()
         }
     }
 
     private fun switchPlayer() {
-        val activePlayerBeforeSwitch = viewModel.getActivePlayerNumber()
-        viewModel.switchPlayer(calculateRemainingTime())
-        getChronometerForPlayer(activePlayerBeforeSwitch)?.stop(getTimeLeftForPlayer(false))
-        startCounter()
+        if (viewModel.isGameResumed()) {
+            val activePlayerBeforeSwitch = viewModel.getActivePlayerNumber()
+            viewModel.switchPlayer(calculateRemainingTime())
+            getChronometerForPlayer(activePlayerBeforeSwitch)?.stop(getTimeLeftForPlayer(false))
+            startCounter()
+        }
     }
-
 
     override fun onPause() {
         super.onPause()
         pauseGame()
     }
 
+    override fun onTimeExpired(winner: Players) {
+        finishGame(winner)
+    }
+
     private fun pauseGame() {
-        playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
+        getChronometerForPlayer(viewModel.getActivePlayerNumber())?.stop()
         viewModel.pauseGame(calculateRemainingTime())
+    }
+
+    private fun resetGame() {
+        getChronometerForPlayer(viewModel.getActivePlayerNumber())?.stop()
+        viewModel.resetGame()
+        binding.invalidateAll()
     }
 
     private fun startCounter() {
@@ -96,7 +115,12 @@ class ChessGameFragment : Fragment() {
             1000
         ) ?: 0L
 
-    private fun getChronometerForPlayer(activePlayerBeforeSwitch: Int): ChessChronometer? =
-        playerTimerMap[activePlayerBeforeSwitch]
+    private fun getChronometerForPlayer(playerNumber: Int): ChessChronometer? =
+        playerTimerMap[playerNumber]
+
+    private fun finishGame(winner : Players) {
+        Toast.makeText(context, getString(R.string.game_over, winner.playerNumber), Toast.LENGTH_LONG).show()
+        viewModel.stopGame()
+    }
 
 }

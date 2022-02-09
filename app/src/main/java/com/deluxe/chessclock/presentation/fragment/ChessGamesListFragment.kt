@@ -36,7 +36,7 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getChessGames().observe(viewLifecycleOwner) {
-            if (it.status == Status.SUCCESS) {
+            if (it.status == Status.SUCCESS && it.data != null) {
                 val adapter = ChessGameAdapter(it.data!!, this@ChessGamesListFragment)
                 binding.chessGames.adapter = adapter
             }

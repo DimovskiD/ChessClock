@@ -31,28 +31,38 @@ data class ChessGame(val name: String, val time: Long, val increment: Int, val i
 
     fun getDuration(): String = (time * 1000).formatTime()
 
-    fun start() {
+    fun start() : GameState {
         players.first().isActive = true
         resume()
+        return gameState
     }
 
-    fun pause(timeRemaining: Long) {
+
+    fun pause(timeRemaining: Long) : GameState {
         if (gameState == GameState.RESUMED) {
             getActivePlayer()?.time = timeRemaining
             gameState = GameState.PAUSED
         }
+        return gameState
     }
 
-    fun resume() {
-        gameState = GameState.RESUMED
+    fun resume() : GameState {
+        if (gameState == GameState.PAUSED || gameState == GameState.NOT_STARTED) gameState = GameState.RESUMED
+        return gameState
     }
 
-    fun reset() {
+    fun stop() : GameState {
+        gameState = GameState.FINISHED
+        return gameState
+    }
+
+    fun reset() : GameState {
         players.forEach { it.restart(time) }
         gameState = GameState.NOT_STARTED
+        return gameState
     }
 
-    fun isGameStarted(): Boolean = gameState != GameState.NOT_STARTED
+    fun isGameStarted(): Boolean = gameState != GameState.NOT_STARTED && gameState != GameState.FINISHED
     fun isGameResumed(): Boolean = gameState == GameState.RESUMED
 
     fun getPlayer(isActive : Boolean) : Player? = players.firstOrNull() { it.isActive == isActive}
@@ -63,5 +73,4 @@ data class ChessGame(val name: String, val time: Long, val increment: Int, val i
     private fun shouldIncrement(movesMade: Int): Boolean = movesMade >= 1
 
     override fun toString(): String = name
-
 }

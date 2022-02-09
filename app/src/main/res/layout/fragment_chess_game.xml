@@ -2,6 +2,10 @@
 
 <layout>
     <data>
+
+        <import type="com.deluxe.core.data.GameState"
+            alias="GameState" />
+
         <variable
             name="viewModel"
             type="com.deluxe.chessclock.framework.viewmodel.ChessViewModel" />
@@ -63,8 +67,9 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@{viewModel.gameStarted ? @drawable/ic_baseline_pause_24 :@drawable/ic_baseline_play_arrow_24}"
+            android:src="@{viewModel.gameState == GameState.RESUMED ? @drawable/ic_baseline_pause_24 :@drawable/ic_baseline_play_arrow_24}"
             android:layout_gravity="center_horizontal"
+            android:visibility="@{viewModel.gameState != GameState.FINISHED}"
             android:id="@+id/start"
             />
 
@@ -72,8 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_restart"
-            android:id="@+id/restart"
-            android:visibility="@{!viewModel.gameStarted}"
+            android:id="@+id/reset"
+            android:visibility="@{viewModel.gameState == GameState.PAUSED || viewModel.gameState == GameState.FINISHED}"
             />
     </LinearLayout>
 
