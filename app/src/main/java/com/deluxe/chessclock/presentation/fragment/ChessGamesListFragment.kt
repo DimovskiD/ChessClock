@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import com.deluxe.chessclock.R
 import com.deluxe.chessclock.databinding.FragmentListChessGamesBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
 import com.deluxe.chessclock.presentation.adapter.ChessGameAdapter
 import com.deluxe.chessclock.presentation.listener.OnChessGameClickedListener
+import com.deluxe.chessclock.presentation.util.navigateSafely
 import com.deluxe.core.data.ChessGame
 import com.deluxe.core.data.Status
 
@@ -47,8 +48,15 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToFragmentChessGame())
     }
 
-    private fun navigate(direction: NavDirections) {
-        Navigation.findNavController(binding.root).navigate(direction)
+    override fun onCustomChessGameClick(chessGame: ChessGame) {
+        navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToStartCustomChessGameFragment())
     }
+
+    private fun navigate(direction: NavDirections) = navigateSafely(
+        binding.root,
+        direction,
+        R.id.fragmentListChessGames
+    )
+
 
 }

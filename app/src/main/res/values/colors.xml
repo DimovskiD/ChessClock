@@ -11,5 +11,6 @@
     <color name="gray_light">#5E5E5E</color>
     <color name="orange">#F47836</color>
     <color name="orange_variant">#E15003</color>
+    <color name="red">#F44336</color>
 
 </resources>

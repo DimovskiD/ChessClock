@@ -4,4 +4,5 @@
     <dimen name="pawn_size">25dp</dimen>
     <dimen name="half_margin_game">5dp</dimen>
     <dimen name="padding_recycler_element">10dp</dimen>
+    <dimen name="margin_game_double">20dp</dimen>
 </resources>

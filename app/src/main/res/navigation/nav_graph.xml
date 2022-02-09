@@ -15,9 +15,20 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:destination="@id/fragmentChessGame" />
+        <action
+            android:id="@+id/action_fragmentListChessGames_to_startCustomChessGameFragment"
+            app:destination="@id/startCustomChessGameFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragmentChessGame"
         android:name="com.deluxe.chessclock.presentation.fragment.ChessGameFragment">
     </fragment>
+    <dialog
+        android:id="@+id/startCustomChessGameFragment"
+        android:name="com.deluxe.chessclock.presentation.fragment.StartCustomChessGameFragment"
+        android:label="StartCustomChessGameFragment" >
+        <action
+            android:id="@+id/action_startCustomChessGameFragment_to_fragmentChessGame"
+            app:destination="@id/fragmentChessGame" />
+    </dialog>
 </navigation>

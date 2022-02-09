@@ -3,4 +3,11 @@
     <string name="choose_chess_game">Choose chess game</string>
     <string name="game_over">Game over! Winner: Player %1d</string>
     <string name="total_moves">Total Moves: </string>
+    <string name="custom_game">Custom Game</string>
+    <string name="name_of_the_game">Name of the game</string>
+    <string name="increment">Increment (sec.)</string>
+    <string name="duration">Duration (min.)</string>
+    <string name="save">Save?</string>
+    <string name="start">Start</string>
+    <string name="start_a_custom_game">Start a custom game</string>
 </resources>

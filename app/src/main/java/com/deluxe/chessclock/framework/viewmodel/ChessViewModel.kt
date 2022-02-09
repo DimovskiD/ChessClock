@@ -5,6 +5,8 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
 import com.deluxe.chessclock.framework.UseCases
+import com.deluxe.chessclock.framework.data.model.AddChessGame
+import com.deluxe.chessclock.framework.data.model.ChessGamePlaceholder
 import com.deluxe.chessclock.framework.di.ApplicationModule
 import com.deluxe.chessclock.framework.di.DaggerViewModelComponent
 import com.deluxe.core.data.ChessGame
@@ -28,7 +30,11 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getChessGames() = liveData {
         emit(Resource.loading(null))
-        emit(Resource.success(useCases.getAllChessGames()))
+        val listOfGames = useCases.getAllChessGames()
+        val gamesWithOptionToAdd : ArrayList<ChessGame> = arrayListOf(AddChessGame())
+        gamesWithOptionToAdd.addAll(listOfGames)
+        if (gamesWithOptionToAdd.size % 2 == 1) gamesWithOptionToAdd.add(ChessGamePlaceholder())
+        emit(Resource.success(gamesWithOptionToAdd))
     }
 
     fun getActivePlayerNumber(): Int =
