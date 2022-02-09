@@ -30,7 +30,7 @@
             android:layout_centerInParent="true"
             android:id="@+id/player_two_time"
             android:countDown="true"
-            android:text="@{viewModel.activeGame.duration}"
+            android:text="@{viewModel.selectedGame.duration}"
             android:textColor="@color/white"
             style="@style/TextAppearance.MaterialComponents.Headline3" />
 
@@ -126,7 +126,7 @@
             android:layout_centerInParent="true"
             android:id="@+id/player_one_time"
             android:countDown="true"
-            android:text="@{viewModel.activeGame.duration}"
+            android:text="@{viewModel.selectedGame.duration}"
             android:textColor="@color/black"
             style="@style/TextAppearance.MaterialComponents.Headline3" />
 

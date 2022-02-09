@@ -12,12 +12,12 @@ import com.deluxe.chessclock.R
 import com.deluxe.chessclock.databinding.FragmentListChessGamesBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
 import com.deluxe.chessclock.presentation.adapter.ChessGameAdapter
-import com.deluxe.chessclock.presentation.listener.OnChessGameClickedListener
+import com.deluxe.chessclock.presentation.listener.OnChessGameActionListener
 import com.deluxe.chessclock.presentation.util.navigateSafely
 import com.deluxe.core.data.ChessGame
 import com.deluxe.core.data.Status
 
-class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
+class ChessGamesListFragment : Fragment(), OnChessGameActionListener {
 
     private val binding : FragmentListChessGamesBinding by lazy { FragmentListChessGamesBinding.inflate(
         LayoutInflater.from(context)) }
@@ -31,7 +31,6 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,21 +40,35 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
                 binding.chessGames.adapter = adapter
             }
         }
+
+        viewModel.shouldUpdateList.observe(viewLifecycleOwner) {
+            if (it != null) adapter?.itemChanged(it)
+        }
         binding.chessGames.layoutManager = GridLayoutManager(context,2)
     }
 
-    override fun onChessGameClick(chessGame: ChessGame) {
-        viewModel.setActiveGame(chessGame)
+    override fun onResume() {
+        super.onResume()
+        viewModel.setSelectedGame(null)
+    }
+
+    override fun onStartChessGame(chessGame: ChessGame) {
+        viewModel.setSelectedGame(chessGame)
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToFragmentChessGame())
     }
 
-    override fun onCustomChessGameClick(chessGame: ChessGame) {
+    override fun onAddChessGame(chessGame: ChessGame) {
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToStartCustomChessGameFragment())
     }
 
     override fun onChessGameDelete(chessGame: ChessGame) {
         viewModel.deleteGame(chessGame)
         adapter?.removeGame(chessGame)
+    }
+
+    override fun onEditChessGame(chessGame: ChessGame) {
+        viewModel.setSelectedGame(chessGame)
+        navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToStartCustomChessGameFragment())
     }
 
     private fun navigate(direction: NavDirections) = navigateSafely(

@@ -107,7 +107,7 @@ class ChessGameFragment : Fragment(), OnTimeExpiredListener {
     }
 
     private fun getTimeLeftForPlayer(isActive: Boolean): Long =
-        viewModel.activeGame?.getPlayer(isActive)?.getTimeInMillis() ?: 0L
+        viewModel.selectedGame?.getPlayer(isActive)?.getTimeInMillis() ?: 0L
 
 
     private fun calculateRemainingTime(): Long =

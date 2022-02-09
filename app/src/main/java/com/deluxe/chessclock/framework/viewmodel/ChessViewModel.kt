@@ -2,9 +2,7 @@ package com.deluxe.chessclock.framework.viewmodel
 
 import android.app.Application
 import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.deluxe.chessclock.framework.UseCases
 import com.deluxe.chessclock.framework.data.model.AddChessGame
 import com.deluxe.chessclock.framework.data.model.ChessGamePlaceholder
@@ -16,6 +14,7 @@ import com.deluxe.core.data.Players
 import com.deluxe.core.data.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -24,8 +23,11 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
     lateinit var useCases: UseCases
 
-    var activeGame: ChessGame? = null
+    var selectedGame: ChessGame? = null
         private set
+
+    private val _mutableShouldUpdateList : MutableLiveData<ChessGame?> = MutableLiveData(null)
+    val shouldUpdateList : LiveData<ChessGame?> = _mutableShouldUpdateList
 
     val gameState: ObservableField<GameState> = ObservableField(GameState.NOT_STARTED)
 
@@ -43,7 +45,9 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
 
     fun saveChessGame(chessGame: ChessGame) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            useCases.insertChessGame.invoke(chessGame)
+            selectedGame = chessGame
+            val result = useCases.insertChessGame.invoke(chessGame)
+            if (result > 0) refreshGamesList()
         }
     }
 
@@ -54,34 +58,38 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getActivePlayerNumber(): Int =
-        activeGame?.getActivePlayerNumber() ?: 0
+        selectedGame?.getActivePlayerNumber() ?: 0
 
-    fun setActiveGame(chessGame: ChessGame) {
-        this.activeGame = chessGame
+    fun setSelectedGame(chessGame: ChessGame?) {
+        this.selectedGame = chessGame
         player1Moves.set(0)
         player2Moves.set(0)
         updateGameStartedObserver { GameState.NOT_STARTED }
     }
 
     fun switchPlayer(remainingTime: Long) {
-        val previouslyActivePlayer = activeGame?.getActivePlayerNumber()
-        activeGame?.switchPlayer(if (remainingTime == 0L) activeGame!!.time else remainingTime)
+        val previouslyActivePlayer = selectedGame?.getActivePlayerNumber()
+        selectedGame?.switchPlayer(if (remainingTime == 0L) selectedGame!!.time else remainingTime)
         notifyObservers(previouslyActivePlayer ?: -1)
     }
 
-    fun stopGame() = updateGameStartedObserver { activeGame?.stop() }
+    fun stopGame() = updateGameStartedObserver { selectedGame?.stop() }
 
-    fun isGameResumed(): Boolean = activeGame?.isGameResumed() == true
+    fun isGameResumed(): Boolean = selectedGame?.isGameResumed() == true
 
     fun pauseGame(playerTimeRemaining: Long?) =
-        updateGameStartedObserver { activeGame?.pause(playerTimeRemaining ?: 0L) }
+        updateGameStartedObserver { selectedGame?.pause(playerTimeRemaining ?: 0L) }
 
     fun resumeGame() = updateGameStartedObserver {
-        if (activeGame?.isGameStarted() == false) activeGame?.start()
-        else activeGame?.resume()
+        if (selectedGame?.isGameStarted() == false) selectedGame?.start()
+        else selectedGame?.resume()
     }
 
-    fun resetGame() = updateGameStartedObserver { activeGame?.reset() }
+    fun resetGame() = updateGameStartedObserver { selectedGame?.reset() }
+
+    private fun refreshGamesList() {
+        _mutableShouldUpdateList.postValue(selectedGame)
+    }
 
     private fun updateGameStartedObserver(getGameState: () -> GameState?) =
         this.gameState.set(getGameState.invoke())
@@ -98,6 +106,8 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun isEditMode() = selectedGame != null
 
     init {
         DaggerViewModelComponent

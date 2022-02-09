@@ -81,11 +81,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/center_2"
-            android:src="@drawable/ic_baseline_play_arrow_24"
+            app:layout_constraintEnd_toStartOf="@id/start"
+            android:src="@drawable/ic_baseline_edit_24"
             app:tint="@color/white"
             android:layout_gravity="center_horizontal"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.7"
+            android:id="@+id/edit"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_game_screen"
+            android:layout_marginEnd="@dimen/margin_game_screen"
+            android:background="@drawable/button_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ic_baseline_play_arrow_24"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/start"
             />
 
@@ -96,26 +112,16 @@
             android:layout_marginEnd="@dimen/margin_game_screen"
             android:background="@drawable/button_background"
             android:backgroundTint="@color/red"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.3"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/center_2"
+            app:layout_constraintStart_toEndOf="@id/start"
             app:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_baseline_delete_24"
             android:layout_gravity="center_horizontal"
             android:id="@+id/delete"
             />
-
-
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/center_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
