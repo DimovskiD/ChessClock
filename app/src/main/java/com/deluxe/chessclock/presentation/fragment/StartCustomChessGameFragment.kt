@@ -58,6 +58,7 @@ class StartCustomChessGameFragment : BottomSheetDialogFragment() {
     }
 
     private fun initEditMode() {
+        binding.title.text = getString(R.string.edit_game)
         binding.save.isChecked = true
         binding.save.visibility = View.GONE
         binding.start.text = getString(R.string.save)
@@ -84,6 +85,5 @@ class StartCustomChessGameFragment : BottomSheetDialogFragment() {
         binding.durationText.text.toString().length <= binding.duration.counterMaxLength &&
                 binding.incrementText.text.toString().length <= binding.increment.counterMaxLength &&
                 binding.nameOfTheGameText.text.toString().length <= binding.nameOfTheGame.counterMaxLength
-
 
 }

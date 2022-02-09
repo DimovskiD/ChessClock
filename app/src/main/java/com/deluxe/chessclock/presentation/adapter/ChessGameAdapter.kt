@@ -23,6 +23,7 @@ class ChessGameAdapter(
     private val colorsQueue =
         CircularLinkedList(listOf(R.color.white, R.color.black, R.color.black, R.color.white))
     private val positionToColorMap = hashMapOf<Int, Pair<Int, Int>>()
+    private var actionsShownPosition = -1
 
     private enum class ViewType { GAME, CUSTOM_GAME, GAME_PLACEHOLDER }
 
@@ -67,19 +68,29 @@ class ChessGameAdapter(
 
     override fun getItemCount(): Int = chessGames.size
 
+    fun itemChanged(selectedGame: ChessGame) {
+        val index = chessGames.indexOf(chessGames.first { it.id == selectedGame.id })
+        chessGames[index] = selectedGame
+        notifyItemChanged(index)
+    }
+
     fun removeGame(chessGame: ChessGame) {
         val index = chessGames.indexOf(chessGame)
         if (index > -1) {
             chessGames.remove(chessGame)
-            if (chessGames.size % 2 == 0) {
-                val placeholder= chessGames.firstOrNull { it is ChessGamePlaceholder }
-                if (placeholder!=null) chessGames.remove(placeholder)
-            } else {
-                chessGames.add(ChessGamePlaceholder())
-            }
+            if (shouldAddPlaceholder()) chessGames.add(ChessGamePlaceholder())
+            else removePlaceholder()
             notifyItemRangeChanged(index, chessGames.size - 1)
         }
     }
+
+    private fun removePlaceholder() {
+        chessGames.firstOrNull { it is ChessGamePlaceholder }?.let { placeholder ->
+            chessGames.remove(placeholder)
+        }
+    }
+
+    private fun shouldAddPlaceholder(): Boolean = chessGames.size % 2 == 1
 
     private fun getColorPair(context: Context, position: Int): Pair<Int, Int> {
         if (positionToColorMap[position] != null) return positionToColorMap[position]!!
@@ -91,22 +102,17 @@ class ChessGameAdapter(
         return positionToColorMap[position]!!
     }
 
-    fun itemChanged(selectedGame: ChessGame) {
-        val index = chessGames.indexOf(chessGames.first { it.id == selectedGame.id })
-        chessGames[index] = selectedGame
-        notifyItemChanged(index)
-    }
-
     inner class ChessGameViewHolder(private val binding: ChessGameViewHolderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(chessGame: ChessGame, position: Int) {
-            setClickListeners(chessGame)
+            setClickListeners(chessGame, position)
             setUpUI(chessGame, position)
         }
 
         private fun setUpUI(chessGame: ChessGame, position: Int) {
-
+            binding.actionsContainer.visibility = View.GONE
+            binding.informationContainer.visibility = View.VISIBLE
             binding.nameOfTheGame.text = chessGame.toString()
             binding.increment.text = chessGame.increment.toString()
             binding.duration.text = chessGame.getDuration()
@@ -120,30 +126,34 @@ class ChessGameAdapter(
             binding.timeIcon.setColorFilter(foregroundColor)
         }
 
-        private fun setClickListeners(chessGame: ChessGame) {
+        private fun setClickListeners(chessGame: ChessGame, position: Int) {
             binding.root.setOnClickListener {
-                toggleVisibility()
+                toggleVisibility(position)
             }
             binding.start.setOnClickListener {
                 chessGameActionListener.onStartChessGame(chessGame)
-                toggleVisibility()
+                toggleVisibility(position)
             }
             binding.delete.setOnClickListener {
+                actionsShownPosition = -1
                 chessGameActionListener.onChessGameDelete(chessGame)
-                toggleVisibility()
+                toggleVisibility(position)
             }
-
             binding.edit.setOnClickListener {
                 chessGameActionListener.onEditChessGame(chessGame)
-                toggleVisibility()
+                toggleVisibility(position)
             }
         }
 
-        private fun toggleVisibility() {
+        private fun toggleVisibility(position: Int) {
+            if (actionsShownPosition != -1 && actionsShownPosition != position)
+                notifyItemChanged(actionsShownPosition)
             binding.actionsContainer.visibility =
                 if (binding.actionsContainer.visibility == View.GONE) View.VISIBLE else View.GONE
             binding.informationContainer.visibility =
                 if (binding.actionsContainer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            if (binding.actionsContainer.visibility == View.VISIBLE)
+                actionsShownPosition = position
         }
     }
 

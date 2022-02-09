@@ -14,7 +14,6 @@ import com.deluxe.core.data.Players
 import com.deluxe.core.data.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -46,7 +45,7 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
     fun saveChessGame(chessGame: ChessGame) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             selectedGame = chessGame
-            val result = useCases.insertChessGame.invoke(chessGame)
+            val result = useCases.upsertChessGame.invoke(chessGame)
             if (result > 0) refreshGamesList()
         }
     }
