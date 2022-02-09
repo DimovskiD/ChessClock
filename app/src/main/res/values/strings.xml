@@ -2,4 +2,5 @@
     <string name="app_name">Chess Clock</string>
     <string name="choose_chess_game">Choose chess game</string>
     <string name="game_over">Game over! Winner: Player %1d</string>
+    <string name="total_moves">Total Moves: </string>
 </resources>

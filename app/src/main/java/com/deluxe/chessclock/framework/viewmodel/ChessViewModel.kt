@@ -42,9 +42,9 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun switchPlayer(remainingTime: Long) {
-        val activePlayer =
-            activeGame?.switchPlayer(if (remainingTime == 0L) activeGame!!.time else remainingTime)
-        notifyObservers(activePlayer?.playerNumber ?: -1)
+        val previouslyActivePlayer = activeGame?.getActivePlayerNumber()
+        activeGame?.switchPlayer(if (remainingTime == 0L) activeGame!!.time else remainingTime)
+        notifyObservers(previouslyActivePlayer ?: -1)
     }
 
     fun stopGame() = updateGameStartedObserver { activeGame?.stop() }

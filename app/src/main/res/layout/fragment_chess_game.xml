@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
         <import type="com.deluxe.core.data.GameState"
@@ -13,7 +13,6 @@
 
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,13 +34,38 @@
             android:textColor="@color/white"
             style="@style/TextAppearance.MaterialComponents.Headline3" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/white"
-            android:text="@{Integer.toString(viewModel.player1Moves)}" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_game_screen"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="@dimen/pawn_size"
+                android:layout_height="@dimen/pawn_size"
+                android:src="@drawable/ic_pawn_svgrepo_com"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:text="@string/total_moves" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+
+                android:layout_marginStart="@dimen/half_margin_game"
+                android:layout_gravity="center_vertical"
+                android:text="@{Integer.toString(viewModel.player2Moves)}" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -60,6 +84,7 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:animateLayoutChanges="true"
         android:elevation="2dp"
         app:layout_constraintTop_toTopOf="@id/vertical_center"
         app:layout_constraintBottom_toBottomOf="@id/vertical_center">
@@ -67,6 +92,9 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_game_screen"
+            android:layout_marginEnd="@dimen/margin_game_screen"
+            android:background="@drawable/button_background"
             android:src="@{viewModel.gameState == GameState.RESUMED ? @drawable/ic_baseline_pause_24 :@drawable/ic_baseline_play_arrow_24}"
             android:layout_gravity="center_horizontal"
             android:visibility="@{viewModel.gameState != GameState.FINISHED}"
@@ -76,6 +104,9 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_game_screen"
+            android:layout_marginEnd="@dimen/margin_game_screen"
+            android:background="@drawable/button_background"
             android:src="@drawable/ic_restart"
             android:id="@+id/reset"
             android:visibility="@{viewModel.gameState == GameState.PAUSED || viewModel.gameState == GameState.FINISHED}"
@@ -99,13 +130,37 @@
             android:textColor="@color/black"
             style="@style/TextAppearance.MaterialComponents.Headline3" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black"
-            android:text="@{Integer.toString(viewModel.player2Moves)}" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_game_screen"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="@dimen/pawn_size"
+                android:layout_height="@dimen/pawn_size"
+                android:src="@drawable/ic_pawn_svgrepo_com"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/black"
+                android:text="@string/total_moves" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginStart="@dimen/half_margin_game"
+                android:layout_gravity="center_vertical"
+                android:text="@{Integer.toString(viewModel.player1Moves)}" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
