@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.deluxe.chessclock.framework.UseCases
 import com.deluxe.chessclock.framework.data.model.AddChessGame
 import com.deluxe.chessclock.framework.data.model.ChessGamePlaceholder
@@ -13,6 +14,9 @@ import com.deluxe.core.data.ChessGame
 import com.deluxe.core.data.GameState
 import com.deluxe.core.data.Players
 import com.deluxe.core.data.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ChessViewModel(application: Application) : AndroidViewModel(application) {
@@ -35,6 +39,12 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
         gamesWithOptionToAdd.addAll(listOfGames)
         if (gamesWithOptionToAdd.size % 2 == 1) gamesWithOptionToAdd.add(ChessGamePlaceholder())
         emit(Resource.success(gamesWithOptionToAdd))
+    }
+
+    fun saveChessGame(chessGame: ChessGame) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            useCases.insertChessGame.invoke(chessGame)
+        }
     }
 
     fun getActivePlayerNumber(): Int =

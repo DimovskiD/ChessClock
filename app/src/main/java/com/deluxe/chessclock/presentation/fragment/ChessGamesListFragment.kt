@@ -53,7 +53,6 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
     }
 
     private fun navigate(direction: NavDirections) = navigateSafely(
-        binding.root,
         direction,
         R.id.fragmentListChessGames
     )
