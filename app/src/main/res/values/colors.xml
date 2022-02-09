@@ -10,4 +10,6 @@
     <color name="gray_dark">#303030</color>
     <color name="gray_light">#5E5E5E</color>
     <color name="orange">#F47836</color>
+    <color name="orange_variant">#E15003</color>
+
 </resources>

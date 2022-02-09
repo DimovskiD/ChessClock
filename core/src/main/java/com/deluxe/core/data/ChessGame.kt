@@ -4,8 +4,7 @@ import com.deluxe.core.formatTime
 import java.io.Serializable
 import java.lang.Exception
 
-data class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = 0L) :
-    Serializable {
+class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = 0L)  {
 
     private val players = listOf(
         Player(Players.PLAYER_ONE.playerNumber, time, 0),

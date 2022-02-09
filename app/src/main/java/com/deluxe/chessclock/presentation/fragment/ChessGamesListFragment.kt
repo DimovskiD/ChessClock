@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.deluxe.chessclock.databinding.FragmentListChessGamesBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
 import com.deluxe.chessclock.presentation.adapter.ChessGameAdapter
@@ -41,14 +39,7 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
                 binding.chessGames.adapter = adapter
             }
         }
-
-        binding.chessGames.layoutManager = LinearLayoutManager(context)
-        binding.chessGames.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                LinearLayoutManager.VERTICAL
-            )
-        )
+        binding.chessGames.layoutManager = GridLayoutManager(context,2)
     }
 
     override fun onChessGameClick(chessGame: ChessGame) {
@@ -58,17 +49,6 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
 
     private fun navigate(direction: NavDirections) {
         Navigation.findNavController(binding.root).navigate(direction)
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        (requireActivity() as? AppCompatActivity)?.supportActionBar?.hide()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as? AppCompatActivity)?.supportActionBar?.show()
     }
 
 }
