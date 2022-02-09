@@ -16,8 +16,7 @@ class ChessGamesDataSource(context : Context) : ChessDataSource {
 
     override suspend fun getChessGameById(chessGameId: Long): ChessGame? = chessGameDao.getChessGameById(chessGameId)?.toChessGame()
 
-    override suspend fun deleteChessGame(chessGame: ChessGame) = chessGameDao.deleteChessGame(
-        ChessGameEntity.fromChessGame(chessGame))
+    override suspend fun deleteChessGame(chessGame: ChessGame) = chessGameDao.deleteChessGame(ChessGameEntity.fromChessGame(chessGame))
 
 
 }

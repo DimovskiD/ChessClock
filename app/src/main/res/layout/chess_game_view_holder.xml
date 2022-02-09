@@ -8,56 +8,117 @@
     android:focusable="true"
     android:padding="@dimen/padding_recycler_element">
 
-    <TextView
-        android:id="@+id/name_of_the_game"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/center" />
+        android:layout_height="match_parent"
+        android:id="@+id/information_container"
+        >
+        <TextView
+            android:id="@+id/name_of_the_game"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/center" />
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/center">
+
+            <ImageView
+                android:id="@+id/time_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_hourglass_top_24" />
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp" />
+
+            <ImageView
+                android:id="@+id/increment_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_keyboard_arrow_up_24" />
+
+            <TextView
+                android:id="@+id/increment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/center">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/actionsContainer">
 
-        <ImageView
-            android:id="@+id/time_icon"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_hourglass_top_24" />
+            android:layout_marginStart="@dimen/margin_game_screen"
+            android:layout_marginEnd="@dimen/margin_game_screen"
+            android:background="@drawable/button_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/center_2"
+            android:src="@drawable/ic_baseline_play_arrow_24"
+            app:tint="@color/white"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintHorizontal_bias="0.8"
+            android:id="@+id/start"
+            />
 
-        <TextView
-            android:id="@+id/duration"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp" />
+            android:layout_marginStart="@dimen/margin_game_screen"
+            android:layout_marginEnd="@dimen/margin_game_screen"
+            android:background="@drawable/button_background"
+            android:backgroundTint="@color/red"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/center_2"
+            app:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/delete"
+            />
 
-        <ImageView
-            android:id="@+id/increment_icon"
+
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_keyboard_arrow_up_24" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/increment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
 
 </com.deluxe.chessclock.presentation.widget.SquareConstraintLayout>

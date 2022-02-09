@@ -47,6 +47,12 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteGame(chessGame: ChessGame) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            useCases.deleteChessGame.invoke(chessGame)
+        }
+    }
+
     fun getActivePlayerNumber(): Int =
         activeGame?.getActivePlayerNumber() ?: 0
 

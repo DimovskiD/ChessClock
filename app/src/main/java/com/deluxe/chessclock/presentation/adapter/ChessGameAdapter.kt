@@ -2,7 +2,9 @@ package com.deluxe.chessclock.presentation.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.deluxe.chessclock.R
 import com.deluxe.chessclock.databinding.AddChessGameViewHolderBinding
@@ -15,7 +17,7 @@ import com.deluxe.chessclock.presentation.listener.OnChessGameClickedListener
 import com.deluxe.core.data.ChessGame
 
 class ChessGameAdapter(
-    private val chessGames: List<ChessGame>,
+    private val chessGames: ArrayList<ChessGame>,
     private val chessGameClickedListener: OnChessGameClickedListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -65,6 +67,14 @@ class ChessGameAdapter(
 
     override fun getItemCount(): Int = chessGames.size
 
+    fun removeGame(chessGame: ChessGame) {
+        val index = chessGames.indexOf(chessGame)
+        if (index > -1) {
+            chessGames.remove(chessGame)
+            notifyItemRemoved(index) //todo handle remaining items color
+        }
+    }
+
     private fun getColorPair(context: Context): Pair<Int, Int> {
         val backgroundColorResId = colorsQueue.pop()
         val foregroundColor =
@@ -77,7 +87,17 @@ class ChessGameAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(chessGame: ChessGame) {
-            binding.root.setOnClickListener { chessGameClickedListener.onChessGameClick(chessGame) }
+            binding.root.setOnClickListener {
+                toggleVisibility()
+            }
+            binding.start.setOnClickListener {
+                chessGameClickedListener.onChessGameClick(chessGame)
+                toggleVisibility()
+            }
+            binding.delete.setOnClickListener {
+                chessGameClickedListener.onChessGameDelete(chessGame)
+                toggleVisibility()
+            }
             binding.nameOfTheGame.text = chessGame.toString()
             binding.increment.text = chessGame.increment.toString()
             binding.duration.text = chessGame.getDuration()
@@ -90,6 +110,11 @@ class ChessGameAdapter(
             binding.increment.setTextColor(foregroundColor)
             binding.incrementIcon.setColorFilter(foregroundColor)
             binding.timeIcon.setColorFilter(foregroundColor)
+        }
+
+        private fun toggleVisibility() {
+            binding.actionsContainer.visibility = if (binding.actionsContainer.visibility == View.GONE) View.VISIBLE else View.GONE
+            binding.informationContainer.visibility = if (binding.actionsContainer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
     }
 

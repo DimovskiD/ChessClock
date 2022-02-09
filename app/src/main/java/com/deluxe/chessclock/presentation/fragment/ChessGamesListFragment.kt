@@ -22,6 +22,7 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
     private val binding : FragmentListChessGamesBinding by lazy { FragmentListChessGamesBinding.inflate(
         LayoutInflater.from(context)) }
     private val viewModel : ChessViewModel by activityViewModels()
+    private var adapter : ChessGameAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +37,7 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
 
         viewModel.getChessGames().observe(viewLifecycleOwner) {
             if (it.status == Status.SUCCESS && it.data != null) {
-                val adapter = ChessGameAdapter(it.data!!, this@ChessGamesListFragment)
+                adapter = ChessGameAdapter(it.data!!, this@ChessGamesListFragment)
                 binding.chessGames.adapter = adapter
             }
         }
@@ -50,6 +51,11 @@ class ChessGamesListFragment : Fragment(), OnChessGameClickedListener {
 
     override fun onCustomChessGameClick(chessGame: ChessGame) {
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToStartCustomChessGameFragment())
+    }
+
+    override fun onChessGameDelete(chessGame: ChessGame) {
+        viewModel.deleteGame(chessGame)
+        adapter?.removeGame(chessGame)
     }
 
     private fun navigate(direction: NavDirections) = navigateSafely(

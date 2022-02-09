@@ -5,4 +5,5 @@ import com.deluxe.core.data.ChessGame
 interface OnChessGameClickedListener {
     fun onChessGameClick(chessGame: ChessGame)
     fun onCustomChessGameClick(chessGame: ChessGame)
+    fun onChessGameDelete(chessGame: ChessGame)
 }

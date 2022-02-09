@@ -15,7 +15,7 @@ data class ChessGameEntity(
 
     companion object {
         fun fromChessGame(chessGame : ChessGame) : ChessGameEntity = ChessGameEntity(
-            chessGame.name, chessGame.time, chessGame.increment
+            chessGame.name, chessGame.time, chessGame.increment, chessGame.id
         )
     }
 

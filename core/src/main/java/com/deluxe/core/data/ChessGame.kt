@@ -3,7 +3,7 @@ package com.deluxe.core.data
 import com.deluxe.core.formatTime
 import java.lang.Exception
 
-open class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = 0L)  {
+open class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = -1L)  {
 
     private val players = listOf(
         Player(Players.PLAYER_ONE.playerNumber, time, 0),
