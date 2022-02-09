@@ -8,7 +8,6 @@ import com.deluxe.chessclock.framework.UseCases
 import com.deluxe.chessclock.framework.di.ApplicationModule
 import com.deluxe.chessclock.framework.di.DaggerViewModelComponent
 import com.deluxe.core.data.ChessGame
-import com.deluxe.core.data.GameState
 import com.deluxe.core.data.Players
 import com.deluxe.core.data.Resource
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
         this.activeGame = chessGame
         player1Moves.set(0)
         player2Moves.set(0)
-        gameStarted.set(false)
+        updateGameStartedObserver(false)
     }
 
     fun switchPlayer(remainingTime: Long) {
@@ -61,27 +60,28 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun startGame() {
         activeGame?.start()
-        gameStarted.set(true)
+        updateGameStartedObserver(true)
     }
 
-    fun isGameStarted(): Boolean = activeGame?.gameState == GameState.RESUMED
+    fun isGameResumed(): Boolean = activeGame?.isGameResumed() == true
 
     fun pauseGame(playerTimeRemaining : Long?) {
         activeGame?.pause(playerTimeRemaining?:0L)
-        gameStarted.set(false)
+        updateGameStartedObserver(false)
     }
 
     fun resumeGame() {
-        if (activeGame?.gameState == GameState.NOT_STARTED) startGame()
-        else activeGame?.gameState = GameState.RESUMED
-        gameStarted.set(true)
+        if (activeGame?.isGameStarted() == false) startGame()
+        else activeGame?.resume()
+        updateGameStartedObserver(true)
     }
 
     fun resetGame() {
         activeGame?.reset()
-        gameStarted.set(false)
+        updateGameStartedObserver(false)
     }
 
+    private fun updateGameStartedObserver(isStarted : Boolean) = gameStarted.set(isStarted)
 
     init {
         DaggerViewModelComponent

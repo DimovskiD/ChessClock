@@ -7,8 +7,8 @@ import android.widget.Chronometer
 
 
 class ChessChronometer : Chronometer {
-    var isRunning = false
-        private set
+
+   private var isRunning = false
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -29,7 +29,7 @@ class ChessChronometer : Chronometer {
     }
 
     fun stop(timeLeft: Long) {
-        base = timeLeft
+        base = SystemClock.elapsedRealtime() + timeLeft
         invalidate()
         stop()
     }

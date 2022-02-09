@@ -4,51 +4,64 @@ import com.deluxe.core.formatTime
 import java.io.Serializable
 import java.lang.Exception
 
-data class ChessGame(val name: String, val time : Long, val increment : Int, val id : Long = 0L) : Serializable {
-    val player1 = Player(Players.PLAYER_ONE.playerNumber, time, 0)
-    val player2 = Player(Players.PLAYER_TWO.playerNumber, time, 0)
+data class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = 0L) :
+    Serializable {
 
-    private var activePlayer : Player? = null
-    var gameState : GameState = GameState.NOT_STARTED
+    private val players = listOf(
+        Player(Players.PLAYER_ONE.playerNumber, time, 0),
+        Player(Players.PLAYER_TWO.playerNumber, time, 0)
+    )
 
-    fun switchPlayer(timeRemaining : Long) : Player { //todo calculate increment and show on switch
-        if (activePlayer == null) throw Exception("You need to call start() method before switching players")
-        activePlayer!!.time = timeRemaining
-        activePlayer!!.movesMade++
-        if (activePlayer!!.movesMade >= 1) activePlayer!!.time += increment
-        activePlayer = if (activePlayer == player1) player2 else player1
-        return activePlayer!!
+    private var gameState: GameState = GameState.NOT_STARTED
+
+    fun switchPlayer(timeRemaining: Long): Player {
+        if (getActivePlayer() == null) throw Exception("You need to call start() method before switching players")
+        getActivePlayer()?.let { player ->
+            player.time = timeRemaining
+            player.movesMade++
+            if (shouldIncrement(player.movesMade)) player.time += increment
+            players.forEach {
+                it.isActive = !it.isActive
+            }
+        }
+        return getActivePlayer()!!
     }
 
-    fun getActivePlayerRemainingTime() = activePlayer?.getTimeInMillis()
+    fun getActivePlayerNumber() = getActivePlayer()?.playerNumber
 
-    fun getActivePlayerNumber() = activePlayer?.playerNumber
-
-    fun getDuration() : String {
-       return (time*1000).formatTime()
-    }
-
-    override fun toString(): String {
-        return name
-    }
+    fun getDuration(): String = (time * 1000).formatTime()
 
     fun start() {
-        activePlayer = player1
-        gameState = GameState.RESUMED
+        players.first().isActive = true
+        resume()
     }
 
     fun pause(timeRemaining: Long) {
         if (gameState == GameState.RESUMED) {
-            activePlayer?.time = timeRemaining
+            getActivePlayer()?.time = timeRemaining
             gameState = GameState.PAUSED
         }
     }
 
-    fun reset() {
-        player1.restart(time)
-        player2.restart(time)
-        gameState = GameState.NOT_STARTED
-        activePlayer = null
+    fun resume() {
+        gameState = GameState.RESUMED
     }
+
+    fun reset() {
+        players.forEach { it.restart(time) }
+        gameState = GameState.NOT_STARTED
+    }
+
+    fun isGameStarted(): Boolean = gameState != GameState.NOT_STARTED
+    fun isGameResumed(): Boolean = gameState == GameState.RESUMED
+
+    fun getPlayer(isActive : Boolean) : Player? = players.firstOrNull() { it.isActive == isActive}
+
+    private fun getActivePlayer() = getPlayer(true)
+    private fun getInactivePlayer() = getPlayer(false)
+
+    private fun shouldIncrement(movesMade: Int): Boolean = movesMade >= 1
+
+    override fun toString(): String = name
 
 }

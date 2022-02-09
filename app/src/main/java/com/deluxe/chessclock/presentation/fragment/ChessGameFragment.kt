@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.deluxe.chessclock.databinding.FragmentChessGameBinding
 import com.deluxe.chessclock.framework.viewmodel.ChessViewModel
+import com.deluxe.chessclock.presentation.widget.ChessChronometer
 import com.deluxe.core.data.Players
 
 
@@ -45,28 +46,32 @@ class ChessGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.root.setOnClickListener {
-            if (viewModel.isGameStarted()) {
-                playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
-                viewModel.switchPlayer(calculateRemainingTime()?:0L)
-                startCounter()
-            }
+            if (viewModel.isGameResumed())
+                switchPlayer()
         }
 
         binding.start.setOnClickListener {
-            if (viewModel.isGameStarted()) {
-                pauseGame()
-            } else {
+            if (viewModel.isGameResumed()) pauseGame()
+            else {
                 viewModel.resumeGame()
                 startCounter()
             }
         }
 
         binding.restart.setOnClickListener {
-            playerTimerMap[viewModel.getActivePlayerNumber()]?.stop()
+            getChronometerForPlayer(viewModel.getActivePlayerNumber())?.stop()
             viewModel.resetGame()
             binding.invalidateAll()
         }
     }
+
+    private fun switchPlayer() {
+        val activePlayerBeforeSwitch = viewModel.getActivePlayerNumber()
+        viewModel.switchPlayer(calculateRemainingTime())
+        getChronometerForPlayer(activePlayerBeforeSwitch)?.stop(getTimeLeftForPlayer(false))
+        startCounter()
+    }
+
 
     override fun onPause() {
         super.onPause()
@@ -79,14 +84,19 @@ class ChessGameFragment : Fragment() {
     }
 
     private fun startCounter() {
-        playerTimerMap[viewModel.getActivePlayerNumber()]?.start(
-            viewModel.activeGame?.getActivePlayerRemainingTime() ?: 0L
-        )
+        playerTimerMap[viewModel.getActivePlayerNumber()]?.start(getTimeLeftForPlayer(true))
     }
 
-    private fun calculateRemainingTime(): Long? =
+    private fun getTimeLeftForPlayer(isActive: Boolean): Long =
+        viewModel.activeGame?.getPlayer(isActive)?.getTimeInMillis() ?: 0L
+
+
+    private fun calculateRemainingTime(): Long =
         (playerTimerMap[viewModel.getActivePlayerNumber()]?.base?.minus(SystemClock.elapsedRealtime()))?.div(
             1000
-        )
+        ) ?: 0L
+
+    private fun getChronometerForPlayer(activePlayerBeforeSwitch: Int): ChessChronometer? =
+        playerTimerMap[activePlayerBeforeSwitch]
 
 }
