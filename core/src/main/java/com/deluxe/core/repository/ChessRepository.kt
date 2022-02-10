@@ -8,7 +8,5 @@ class ChessRepository(private val chessDataSource: ChessDataSource) {
 
     suspend fun addChessGame(chessGameEntity: ChessGame) : Long = chessDataSource.addChessGame(chessGameEntity)
 
-    suspend fun getChessGameById(chessGameId : Long) : ChessGame? = chessDataSource.getChessGameById(chessGameId)
-
     suspend fun deleteChessGame(chessGameEntity: ChessGame) = chessDataSource.deleteChessGame(chessGameEntity)
 }

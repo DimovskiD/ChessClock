@@ -8,7 +8,5 @@ interface ChessDataSource {
 
     suspend fun addChessGame(chessGame: ChessGame) : Long
 
-    suspend fun getChessGameById(chessGameId : Long) : ChessGame?
-
     suspend fun deleteChessGame(chessGame: ChessGame)
 }

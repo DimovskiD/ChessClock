@@ -12,9 +12,6 @@ interface ChessGameDao {
     @Query("SELECT * FROM chess_game_entity")
     suspend fun getAllChessGames() : List<ChessGameEntity>
 
-    @Query("SELECT * FROM chess_game_entity WHERE id = :chessGameId")
-    suspend fun getChessGameById(chessGameId : Long) : ChessGameEntity?
-
     @Delete
     suspend fun deleteChessGame(chessGameEntity: ChessGameEntity)
 
