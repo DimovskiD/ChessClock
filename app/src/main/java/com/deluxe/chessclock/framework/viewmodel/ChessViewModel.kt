@@ -68,7 +68,7 @@ class ChessViewModel(application: Application) : AndroidViewModel(application) {
 
     fun switchPlayer(remainingTime: Long) {
         val previouslyActivePlayer = selectedGame?.getActivePlayerNumber()
-        selectedGame?.switchPlayer(if (remainingTime == 0L) selectedGame!!.time else remainingTime)
+        selectedGame?.switchPlayer(remainingTime)
         notifyObservers(previouslyActivePlayer ?: -1)
     }
 

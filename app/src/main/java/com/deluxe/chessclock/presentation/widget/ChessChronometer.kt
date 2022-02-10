@@ -1,55 +1,61 @@
 package com.deluxe.chessclock.presentation.widget
 
 import android.content.Context
-import android.os.SystemClock
+import android.os.CountDownTimer
 import android.util.AttributeSet
-import android.widget.Chronometer
 import com.deluxe.chessclock.presentation.listener.OnTimeExpiredListener
 import com.deluxe.core.data.Players
+import com.deluxe.core.formatTime
 
 
-class ChessChronometer : Chronometer, Chronometer.OnChronometerTickListener {
+class ChessChronometer : androidx.appcompat.widget.AppCompatTextView {
 
-    private var isRunning = false
+    private lateinit var winner : Players
+    private lateinit var countDownTimer: CountDownTimer
+    private var milliSecondsLeft : Long = -1L
+
     private var onTimeExpiredListener : OnTimeExpiredListener? = null
-    private var winner : Players? = null
-
-    constructor(context: Context?) : super(context) { init() }
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) { init() }
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
         context,
         attrs,
         defStyle
-    ) { init() }
+    )
 
-    private fun init() {
-        onChronometerTickListener = this
+    fun init(duration : Long) {
+        milliSecondsLeft = duration
     }
 
-
-    fun start(timeLeft : Long) {
-        base = SystemClock.elapsedRealtime() + timeLeft
-        isRunning = true
-        start()
+    fun start() {
+        countDownTimer = ChessCountDownTimer(milliSecondsLeft)
+        countDownTimer.start()
     }
 
-
-    fun stop(timeLeft: Long) {
-        base = SystemClock.elapsedRealtime() + timeLeft
-        invalidate()
-        isRunning = false
-        stop()
-    }
-
-    override fun onChronometerTick(chronometer: Chronometer?) {
-        if( chronometer?.text.toString() == "00:00") {
-            stop()
-            onTimeExpiredListener?.onTimeExpired(winner!!)
-        }
+    fun stop(timeLeft : Long) {
+        milliSecondsLeft = timeLeft
+        text = timeLeft.formatTime(true)
+        countDownTimer.cancel()
     }
 
     fun bindWinner(player: Players, onTimeExpiredListener: OnTimeExpiredListener) {
         this.onTimeExpiredListener = onTimeExpiredListener
         winner = player
+    }
+
+    fun getTimeLeft(): Long {
+        return milliSecondsLeft
+    }
+
+    inner class ChessCountDownTimer(milliSecondsLeft: Long) :
+        CountDownTimer(milliSecondsLeft, 100) {
+        override fun onTick(milliSecondsLeft: Long) {
+            this@ChessChronometer.milliSecondsLeft = milliSecondsLeft
+            text = milliSecondsLeft.formatTime(true)
+        }
+
+        override fun onFinish() {
+            onTimeExpiredListener?.onTimeExpired(winner)
+        }
     }
 }

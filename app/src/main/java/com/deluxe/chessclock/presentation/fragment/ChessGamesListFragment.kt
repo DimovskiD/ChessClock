@@ -57,7 +57,8 @@ class ChessGamesListFragment : Fragment(), OnChessGameActionListener {
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToFragmentChessGame())
     }
 
-    override fun onAddChessGame(chessGame: ChessGame) {
+    override fun onAddChessGame() {
+        viewModel.setSelectedGame(null)
         navigate(ChessGamesListFragmentDirections.actionFragmentListChessGamesToStartCustomChessGameFragment())
     }
 

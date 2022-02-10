@@ -55,7 +55,7 @@ class ChessGameAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ChessGameViewHolder -> holder.bind(chessGames[position], position)
-            is AddChessGameViewHolder -> holder.bind(chessGames[position], position)
+            is AddChessGameViewHolder -> holder.bind(position)
             is ChessGamePlaceholderViewHolder -> holder.bind(position)
         }
     }
@@ -160,11 +160,9 @@ class ChessGameAdapter(
     inner class AddChessGameViewHolder(private val binding: AddChessGameViewHolderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chessGame: ChessGame, position: Int) {
+        fun bind(position: Int) {
             binding.root.setOnClickListener {
-                chessGameActionListener.onAddChessGame(
-                    chessGame
-                )
+                chessGameActionListener.onAddChessGame()
             }
             val (foregroundColor, backgroundColor) = getColorPair(binding.root.context, position)
             binding.root.setBackgroundColor(backgroundColor)

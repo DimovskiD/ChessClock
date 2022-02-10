@@ -6,5 +6,5 @@ interface OnChessGameActionListener {
     fun onStartChessGame(chessGame: ChessGame)
     fun onChessGameDelete(chessGame: ChessGame)
     fun onEditChessGame(chessGame: ChessGame)
-    fun onAddChessGame(chessGame: ChessGame)
+    fun onAddChessGame()
 }

@@ -5,9 +5,12 @@ import java.lang.Exception
 
 open class ChessGame(val name: String, val time: Long, val increment: Int, val id: Long = -1L)  {
 
+    private val timeInMilliSeconds = time * 1000
+    private val incrementInMilliSeconds = increment * 1000
+
     private val players = listOf(
-        Player(Players.PLAYER_ONE.playerNumber, time, 0),
-        Player(Players.PLAYER_TWO.playerNumber, time, 0)
+        Player(Players.PLAYER_ONE.playerNumber, timeInMilliSeconds, 0),
+        Player(Players.PLAYER_TWO.playerNumber, timeInMilliSeconds, 0)
     )
 
     private var gameState: GameState = GameState.NOT_STARTED
@@ -15,9 +18,9 @@ open class ChessGame(val name: String, val time: Long, val increment: Int, val i
     fun switchPlayer(timeRemaining: Long): Player {
         if (getActivePlayer() == null) throw Exception("You need to call start() method before switching players")
         getActivePlayer()?.let { player ->
-            player.time = timeRemaining
             player.movesMade++
-            if (shouldIncrement(player.movesMade)) player.time += increment
+            player.timeInMillis = timeRemaining +
+                    if (shouldIncrement(player.movesMade)) incrementInMilliSeconds else 0
             players.forEach {
                 it.isActive = !it.isActive
             }
@@ -27,7 +30,7 @@ open class ChessGame(val name: String, val time: Long, val increment: Int, val i
 
     fun getActivePlayerNumber() = getActivePlayer()?.playerNumber
 
-    fun getDuration(): String = (time * 1000).formatTime()
+    fun getDuration(inGame : Boolean = false): String = timeInMilliSeconds.formatTime(inGame)
 
     fun start() : GameState {
         players.first().isActive = true
@@ -38,7 +41,7 @@ open class ChessGame(val name: String, val time: Long, val increment: Int, val i
 
     fun pause(timeRemaining: Long) : GameState {
         if (gameState == GameState.RESUMED) {
-            getActivePlayer()?.time = timeRemaining
+            getActivePlayer()?.timeInMillis = timeRemaining
             gameState = GameState.PAUSED
         }
         return gameState
@@ -55,7 +58,7 @@ open class ChessGame(val name: String, val time: Long, val increment: Int, val i
     }
 
     fun reset() : GameState {
-        players.forEach { it.restart(time) }
+        players.forEach { it.restart(timeInMilliSeconds) }
         gameState = GameState.NOT_STARTED
         return gameState
     }
@@ -64,6 +67,7 @@ open class ChessGame(val name: String, val time: Long, val increment: Int, val i
     fun isGameResumed(): Boolean = gameState == GameState.RESUMED
 
     fun getPlayer(isActive : Boolean) : Player? = players.firstOrNull() { it.isActive == isActive}
+    fun getTimeInMillis(): Long = timeInMilliSeconds
 
     private fun getActivePlayer() = getPlayer(true)
     private fun getInactivePlayer() = getPlayer(false)
