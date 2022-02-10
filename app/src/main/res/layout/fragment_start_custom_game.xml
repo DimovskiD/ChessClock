@@ -1,0 +1,170 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?colorPrimary"
+    android:layout_width="match_parent"
+    android:paddingBottom="10dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/title"
+        android:text="@string/start_a_custom_game"
+        android:layout_margin="@dimen/margin_game_screen"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textColor="?colorOnPrimary"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_of_the_game"
+        android:layout_margin="@dimen/margin_game_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="@string/name_of_the_game"
+        android:textColorHint="?attr/colorOnPrimary"
+        app:counterOverflowTextColor="@color/red"
+        app:counterMaxLength="30"
+        app:counterEnabled="true"
+        app:counterTextColor="?colorOnPrimary"
+        app:boxStrokeWidth="1dp"
+        app:boxCornerRadiusBottomEnd="3dp"
+        app:boxCornerRadiusBottomStart="3dp"
+        app:errorEnabled="true"
+        app:boxCornerRadiusTopEnd="3dp"
+        app:boxStrokeColor="?colorOnPrimary"
+        app:hintTextColor="?colorOnPrimary"
+        app:helperTextTextColor="?colorOnPrimary"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxCornerRadiusTopStart="3dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:textColor="?colorOnPrimary"
+            android:inputType="text"
+            android:id="@+id/name_of_the_game_text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/duration"
+        android:layout_margin="@dimen/margin_game_screen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_of_the_game"
+        app:layout_constraintEnd_toStartOf="@id/center"
+        android:hint="@string/duration"
+        app:counterTextColor="?colorOnPrimary"
+        android:textColorHint="?attr/colorOnPrimary"
+        app:counterOverflowTextColor="@color/red"
+        app:counterMaxLength="4"
+        app:counterEnabled="true"
+        app:boxStrokeWidth="1dp"
+        app:boxCornerRadiusBottomEnd="3dp"
+        app:boxCornerRadiusBottomStart="3dp"
+        app:errorEnabled="true"
+        app:boxCornerRadiusTopEnd="3dp"
+        app:boxStrokeColor="?colorOnPrimary"
+        app:hintTextColor="?colorOnPrimary"
+        app:helperTextTextColor="?colorOnPrimary"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxCornerRadiusTopStart="3dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:textColor="?colorOnPrimary"
+            android:id="@+id/duration_text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/increment"
+        android:layout_margin="@dimen/margin_game_screen"
+        app:layout_constraintStart_toEndOf="@id/center"
+        app:layout_constraintTop_toBottomOf="@id/name_of_the_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="@string/increment"
+        app:counterTextColor="?colorOnPrimary"
+        android:textColorHint="?attr/colorOnPrimary"
+        app:counterOverflowTextColor="@color/red"
+        app:counterMaxLength="2"
+        app:counterEnabled="true"
+        app:boxStrokeWidth="1dp"
+        app:boxCornerRadiusBottomEnd="3dp"
+        app:boxCornerRadiusBottomStart="3dp"
+        app:errorEnabled="true"
+        app:boxCornerRadiusTopEnd="3dp"
+        app:boxStrokeColor="?colorOnPrimary"
+        app:hintTextColor="?colorOnPrimary"
+        app:helperTextTextColor="?colorOnPrimary"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxCornerRadiusTopStart="3dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:textColor="?colorOnPrimary"
+            android:id="@+id/increment_text"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/save"
+        android:layout_margin="@dimen/margin_game_screen"
+        android:textColor="?colorOnPrimary"
+        app:layout_constraintTop_toBottomOf="@id/increment"
+        android:text="@string/save_question"
+        />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/save"
+        android:textColor="?colorPrimary"
+        android:id="@+id/start"
+        android:layout_margin="@dimen/margin_game_screen"
+        android:backgroundTint="?colorOnPrimary"
+        android:text="@string/start"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
